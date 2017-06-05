@@ -1,0 +1,6 @@
+*.mat
+*.hdf5
+*.pkl
+*.bed
+*.h5
+*.fa
