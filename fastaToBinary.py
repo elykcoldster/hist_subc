@@ -29,18 +29,18 @@ if __name__ == "__main__":
     all_binseq = []
     all_counts = []
 
-    counts = loadmat('GM12878_feature_counts.mat')['feat_counts']
+    #counts = loadmat('GM12878_feature_counts.mat')['feat_counts']
 
     n = 0
     for i, line in enumerate(input_fasta):
         if line[0] != '>':
             if n % 10000 == 0:
-                print(n)
+                print(n, len(all_binseq))
             seq = line
             binseq = seq2bin(seq)
             if binseq.shape[0] == 1000:
                 all_binseq.append(binseq)
-                all_counts.append(counts[int(i/2),:])
+                #$all_counts.append(counts[int(i/2),:])
             n += 1
 
             if max_seqs is not None and n >= max_seqs:

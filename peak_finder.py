@@ -87,7 +87,8 @@ if __name__ == "__main__":
 	savemat('GM12878_occupy_1kb.mat', chromosome_occupy)
 
 	feature_counts = []
-	outbed = open('GM12878_peaks_91_feats.bed','w')
+	outbed = open('GM12878_peaks_feats.bed','w')
+	outbed_neg = open('GM12878_peaks_neg.bed', 'w')
 	for chrm in features:
 		for segment in features[chrm]:
 			end = str(int(segment) + 200)
@@ -102,5 +103,21 @@ if __name__ == "__main__":
 			))
 			feature_counts.append(features[chrm][segment])
 
+			random_segment = np.random.randint(0, chromosome_lengths[chrm])
+			while np.any(chromosome_occupy[chrm][int(random_segment / res),:]) or np.any(chromosome_occupy[chrm][int((random_segment + 200) / res),:]):
+				random_segment = np.random.randint(0, chromosome_lengths[chrm])
+
+			outbed_neg.write('{0}\t{1}\t{2}\t{3}\t{4}\t{5}\n'.format(
+				chrm,
+				random_segment,
+				random_segment+200,
+				'.',
+				'0',
+				'.',
+				'0'
+			))
+
 	feature_counts = np.asarray(feature_counts)
 	savemat('GM12878_feature_counts.mat',{'feat_counts' : feature_counts})
+
+	num_seqs = len(feature_counts)
