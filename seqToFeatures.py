@@ -110,7 +110,7 @@ for line in fa_file:
 				'seqs': fullseqs,
 				'labels': labels,
 				'indices': indices,
-				'lineNumbers': lineNumbers
+				'lineNumbers': lineNumbers,
 				'stringData': segdata})
 
 			fullseqs = []
@@ -130,7 +130,13 @@ fullseqs = np.asarray(fullseqs)
 labels = np.asarray(labels)
 indices = np.asarray(indices)
 
-scipy.io.savemat(sys.argv[1] + '.data.' + str(num_files) + '.mat', {'seqs': fullseqs, 'labels': labels, 'indices': indices, 'stringData': segdata})
+scipy.io.savemat(sys.argv[1] + '.data.' + str(num_files) + '.mat',
+				{'bed_file': sys.argv[2],
+				'seqs': fullseqs,
+				'labels': labels,
+				'indices': indices,
+				'lineNumbers': lineNumbers,
+				'stringData': segdata})
 
 """predictions = model.predict(seqs)
 scipy.io.savemat(model_file + '.predictions.mat', {'pred': predictions})

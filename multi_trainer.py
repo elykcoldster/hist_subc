@@ -21,8 +21,8 @@ from keras.layers.wrappers import Bidirectional
 
 print('Building and compiling model...')
 
-seq_input = Input(shape=(100000, 4))
-H = Conv1D(480, 26, padding='valid', input_shape=(1000,4), activation='relu')(seq_input)
+seq_input = Input(shape=(1000, 4))
+H = Conv1D(320, 26, padding='valid', input_shape=(1000,4), activation='relu')(seq_input)
 H = MaxPooling1D(pool_size=13, strides=13)(H)
 H = Dropout(0.2)(H)
 
@@ -31,7 +31,7 @@ H = Bidirectional(LSTM(320, input_shape=(None, 320), return_sequences=True))(H)
 H = Dropout(0.5)(H)
 H = Flatten()(H)
 
-H = Dense(input_dim=75*320, units=100, activation='relu')(H)
+H = Dense(input_dim=75*320, units=925, activation='relu')(H)
 H = Dense(input_dim=925, units=100, activation='sigmoid')(H)
 
 track_input = Input(shape=(1000,))
@@ -40,7 +40,7 @@ G = Dense(units=100, activation='sigmoid')(G)
 
 fc_input = concatenate([H,G])
 
-F = Dense(input_shape=(200,), units = 6)(fc_input)
+F = Dense(input_shape=(200,), units = 6, activation='sigmoid')(fc_input)
 
 model = Model(inputs=[seq_input, track_input], outputs=[F])
 model.compile(loss = 'binary_crossentropy', optimizer = 'rmsprop', metrics=['accuracy'])
@@ -56,6 +56,8 @@ indices = data['indices'][0]
 stringData = data['stringData']
 res = hist_data['res']
 mean_tracks = hist_data['mean']
+
+seqs = seqs[:,49000:50000,:]
 
 seg_length = int(100000/res)
 
@@ -75,4 +77,5 @@ training_tracks = np.asarray(training_tracks)
 #training_tracks = np.expand_dims(training_tracks, axis=2)
 print(training_tracks.shape, seqs.shape, labels.shape)
 
-model.fit(x=[seqs, training_tracks], y=labels)
+model.fit(x=[seqs, training_tracks], y=labels, epochs=25, batch_size=64, validation_split=0.2)
+print(model.predict(x=[seqs, training_tracks]))
