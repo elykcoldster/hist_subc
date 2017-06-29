@@ -27,9 +27,7 @@ def seq2bin(seq):
     return binarray
 
 def strToSubc(str):
-	if str == 'NA':
-		return 0
-	elif str == 'A1':
+	if str == 'A1':
 		return 1
 	elif str == 'A2':
 		return 2
@@ -51,13 +49,13 @@ bed_lines = []
 
 for line in bed_file:
 	subc = strToSubc(line.split()[3])
-	subclabels.append(line.split()[3])
-	bed_lines.append(line)
 	if type(subc) == int:
+		subclabels.append(line.split()[3])
+		bed_lines.append(line)
 		subcs.append(subc)
 
 subcs = to_categorical(subcs)
-print(subcs)
+print(subcs.shape)
 
 print ('Compiling Sequences')
 
